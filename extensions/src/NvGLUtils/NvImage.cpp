@@ -66,7 +66,8 @@ void NvImage::UpperLeftOrigin( bool ul) {
 //
 ////////////////////////////////////////////////////////////
 NvImage::NvImage() : _width(0), _height(0), _depth(0), _levelCount(0), _layers(0), _format(GL_RGBA),
-    _internalFormat(GL_RGBA8), _type(GL_UNSIGNED_BYTE), _elementSize(0), _cubeMap(false) {
+    _internalFormat(GL_RGBA8), _type(GL_UNSIGNED_BYTE), _elementSize(0), _cubeMap(false), 
+	_blockSize_x(4), _blockSize_y(4) {
 }
 
 //
@@ -97,8 +98,8 @@ int32_t NvImage::getImageSize( int32_t level) const {
     w = (w) ? w : 1;
     h = (h) ? h : 1;
     d = (d) ? d : 1;
-    int32_t bw = (compressed) ? ( w + 3 ) / 4 : w;
-    int32_t bh = (compressed) ? ( h + 3 ) / 4 : h;
+    int32_t bw = (compressed) ? ( w - 1 ) / _blockSize_x + 1 : w;
+    int32_t bh = (compressed) ? ( h - 1 ) / _blockSize_y + 1 : h;
     int32_t elementSize = _elementSize;
 
     return bw*bh*d*elementSize;
@@ -710,7 +711,35 @@ bool NvImage::isCompressed() const {
         case GL_COMPRESSED_RED_RGTC1:
         case GL_COMPRESSED_SIGNED_RG_RGTC2:
         case GL_COMPRESSED_SIGNED_RED_RGTC1:
-            return true;
+		case GL_COMPRESSED_RGBA_ASTC_4x4_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_5x4_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_5x5_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_6x5_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_6x6_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_8x5_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_8x6_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_8x8_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_10x5_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_10x6_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_10x8_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_10x10_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_12x10_KHR:
+		case GL_COMPRESSED_RGBA_ASTC_12x12_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR:
+		case GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR:
+		return true;
     }
     return false;
 }

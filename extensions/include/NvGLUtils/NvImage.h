@@ -225,6 +225,9 @@ protected:
     uint32_t _internalFormat;
     uint32_t _type;
     int32_t _elementSize;
+	int32_t _blockSize_x;
+	int32_t _blockSize_y;
+
     bool _cubeMap;
 
     //pointers to the levels

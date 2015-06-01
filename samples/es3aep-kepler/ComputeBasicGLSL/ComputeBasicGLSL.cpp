@@ -95,22 +95,28 @@ void ComputeBasicGLSL::initRendering(void)
     }
 
     //load input texture - this is a normal, "mutable" texture
-    m_sourceImage = NvImage::CreateFromDDSFile("textures/flower1024.dds");
+    //m_sourceImage = NvImage::CreateFromDDSFile("textures/flower1024.dds");
+	m_sourceImage = NvImage::CreateFromDDSFile("textures/cog.dds");
     GLint w = m_sourceImage->getWidth();
     GLint h = m_sourceImage->getHeight();
     GLint intFormat = m_sourceImage->getInternalFormat();
-    GLint format = m_sourceImage->getFormat();
-    GLint type = m_sourceImage->getType();
+   /* GLint format = m_sourceImage->getFormat();
+    GLint type = m_sourceImage->getType();*/
 
     // Image must be immutable in order to be used with glBindImageTexture
     // So we copy the mutable texture to an immutable texture
-    glGenTextures(1, &m_sourceTexture );
+	m_sourceTexture=NvImage::UploadTexture(m_sourceImage);
+	glBindTexture(GL_TEXTURE_2D, m_sourceTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+    /*glGenTextures(1, &m_sourceTexture );
     glBindTexture(GL_TEXTURE_2D, m_sourceTexture);
     glTexStorage2D(GL_TEXTURE_2D, 1, intFormat, w, h );
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, w, h, format, type, m_sourceImage->getLevel(0));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);*/
 
     //create output texture with same size and format as input 
     // Image must be immutable in order to be used with glBindImageTexture
